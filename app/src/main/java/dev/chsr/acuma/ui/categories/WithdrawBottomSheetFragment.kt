@@ -1,6 +1,7 @@
 package dev.chsr.acuma.ui.categories
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dev.chsr.acuma.R
 import dev.chsr.acuma.database.AppDatabase
 import dev.chsr.acuma.databinding.BottomSheetWithdrawBinding
 import dev.chsr.acuma.entity.Category
@@ -56,7 +58,7 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
             categoriesViewmodel.categories.collect { list ->
                 categories = list.filter { category -> category.deleted == 0 }
 
-                val names = mutableListOf<String>()
+                val names = mutableListOf(getString(R.string.distribute))
                 names.addAll(categories.map { it.name })
 
                 val spinnerAdapter = ArrayAdapter(
@@ -74,26 +76,60 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
 
         withdrawButton.setOnClickListener {
             val amount = (amountText.text.toString().toFloat() * 100).toInt()
-            val selected = categories[categoriesSpinner.selectedItemPosition]
-            val updatedCategory = Category(
-                selected.id,
-                selected.name,
-                selected.percent,
-                selected.balance - amount,
-                selected.goal,
-                goalDate = selected.goalDate
-            )
-            categoriesViewmodel.updateCategory(updatedCategory)
-
-            transactionsViewmodel.addTransaction(
-                Transaction(
-                    fromId = selected.id,
-                    toId = null,
-                    amount = amount,
-                    comment = binding.comment.text.toString(),
-                    date = System.currentTimeMillis()
+            if (categoriesSpinner.selectedItemPosition == 0) {
+//                var weightSum = 0f
+//                categories.forEach {
+//                    if (it.percent != 0) {
+//                        weightSum += 1f / (it.percent / 100f)
+//                    }
+//                }
+                categories.forEach {
+                    if (it.percent != 0) {
+//                        val weight = 1f / (it.percent / 100f)
+                        val ctAmount = amount * it.percent / 100f
+                        categoriesViewmodel.updateCategory(
+                            Category(
+                                it.id,
+                                it.name,
+                                it.percent,
+                                it.balance - ctAmount.toInt(),
+                                it.goal,
+                                goalDate = it.goalDate
+                            )
+                        )
+                        transactionsViewmodel.addTransaction(
+                            Transaction(
+                                fromId = it.id,
+                                toId = null,
+                                amount = ctAmount.toInt(),
+                                comment = binding.comment.text.toString() + " (${getString(R.string.distribute)} ${amount / 100})",
+                                date = System.currentTimeMillis()
+                            )
+                        )
+                    }
+                }
+            } else {
+                val selected = categories[categoriesSpinner.selectedItemPosition]
+                val updatedCategory = Category(
+                    selected.id,
+                    selected.name,
+                    selected.percent,
+                    selected.balance - amount,
+                    selected.goal,
+                    goalDate = selected.goalDate
                 )
-            )
+                categoriesViewmodel.updateCategory(updatedCategory)
+
+                transactionsViewmodel.addTransaction(
+                    Transaction(
+                        fromId = selected.id,
+                        toId = null,
+                        amount = amount,
+                        comment = binding.comment.text.toString(),
+                        date = System.currentTimeMillis()
+                    )
+                )
+            }
 
             dismiss()
         }

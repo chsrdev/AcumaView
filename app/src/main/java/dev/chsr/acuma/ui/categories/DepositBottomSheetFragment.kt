@@ -93,7 +93,7 @@ class DepositBottomSheetFragment : BottomSheetDialogFragment() {
                                 fromId = null,
                                 toId = category.id,
                                 amount = amount * category.percent / 100,
-                                comment = binding.comment.text.toString() + " (Distribute ${amount/100})",
+                                comment = binding.comment.text.toString() + " (${getString(R.string.distribute)} ${amount/100f})",
                                 date = System.currentTimeMillis()
                             )
                         )
