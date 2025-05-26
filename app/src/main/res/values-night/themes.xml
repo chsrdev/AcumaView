@@ -1,6 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.Acuma" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">#009FB2</item>
         <item name="colorPrimaryVariant">#006D78</item>

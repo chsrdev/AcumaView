@@ -1,5 +1,6 @@
 package dev.chsr.acuma.ui.categories
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,10 @@ import dev.chsr.acuma.repository.CategoryRepository
 import dev.chsr.acuma.ui.viewmodel.CategoriesViewModel
 import dev.chsr.acuma.ui.viewmodel.CategoriesViewModelFactory
 import kotlinx.coroutines.launch
+import androidx.core.view.isGone
+import dev.chsr.acuma.ui.history.adapter.formatDate
+import dev.chsr.acuma.ui.history.adapter.toLocalDateTime
+import java.util.Calendar
 
 class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetCreateCategoryBinding? = null
@@ -37,6 +42,18 @@ class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
 
         val categoryNameText = binding.categoryName
         val categoryGoalText = binding.categoryGoal
+        val goalDateDialog = DatePickerDialog(requireContext())
+        var goalDateTimestamp: Long? = null
+        binding.categoryGoalDateButton.setOnClickListener {
+            goalDateDialog.show()
+        }
+        goalDateDialog.setOnDateSetListener { view, year, month, dayOfMonth ->
+            val calendar = Calendar.getInstance()
+            calendar.set(year, month, dayOfMonth)
+            goalDateTimestamp = calendar.timeInMillis
+            binding.categoryGoalDateButton.text = calendar.timeInMillis.toLocalDateTime().formatDate(requireContext())
+        }
+
         val categoryPercentSlider = binding.categoryPercentSlider
         categoryPercentSlider.setValues(0f)
         viewLifecycleOwner.lifecycleScope.launch {
@@ -64,7 +81,8 @@ class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
                     goal = if (categoryGoalText.text.toString()
                             .isEmpty()
                     ) null else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
-                    percent = percent
+                    percent = percent,
+                    goalDate = goalDateTimestamp
                 )
             )
             viewLifecycleOwner.lifecycleScope.launch {

@@ -1,5 +1,6 @@
 package dev.chsr.acuma.ui.categories
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,13 @@ import dev.chsr.acuma.database.AppDatabase
 import dev.chsr.acuma.databinding.BottomSheetEditCategoryBinding
 import dev.chsr.acuma.entity.Category
 import dev.chsr.acuma.repository.CategoryRepository
+import dev.chsr.acuma.ui.history.adapter.formatDate
+import dev.chsr.acuma.ui.history.adapter.toLocalDateTime
 import dev.chsr.acuma.ui.viewmodel.CategoriesViewModel
 import dev.chsr.acuma.ui.viewmodel.CategoriesViewModelFactory
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 
 class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialogFragment() {
     private var _binding: BottomSheetEditCategoryBinding? = null
@@ -38,8 +43,29 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
         val categoryNameText = binding.categoryName
         categoryNameText.setText(category.name)
         val categoryGoalText = binding.categoryGoal
+
         if (category.goal != null)
             categoryGoalText.setText((category.goal / 100f).toInt().toString())
+        var goalDateTimestamp: Long? = category.goalDate
+        val calendar = Calendar.getInstance()
+        if (goalDateTimestamp != null) {
+            calendar.timeInMillis = goalDateTimestamp
+            binding.categoryGoalDateButton.text = goalDateTimestamp.toLocalDateTime().formatDate(requireContext())
+        }
+
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val goalDateDialog = DatePickerDialog(requireContext(), { view, year, month, dayOfMonth ->
+            val calendar = Calendar.getInstance()
+            calendar.set(year, month, dayOfMonth)
+            goalDateTimestamp = calendar.timeInMillis
+        }, year, month, day)
+        binding.categoryGoalDateButton.setOnClickListener {
+            goalDateDialog.show()
+        }
+
         val categoryPercentSlider = binding.categoryPercentSlider
         viewLifecycleOwner.lifecycleScope.launch {
             categoriesViewmodel.categories.collect {
@@ -76,13 +102,17 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
                         .isEmpty()
                 ) null else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
                 balance = category.balance,
-                percent = percent
+                percent = percent,
+                goalDate = goalDateTimestamp
             )
             categoriesViewmodel.updateCategory(updatedCategoory)
             if (percent != category.percent)
                 viewLifecycleOwner.lifecycleScope.launch {
                     categoriesViewmodel.getById(-1).collect {
-                        categoriesViewmodel.setCategoryPercent(-1, it.percent - (percent - category.percent))
+                        categoriesViewmodel.setCategoryPercent(
+                            -1,
+                            it.percent - (percent - category.percent)
+                        )
                     }
                 }
             dismiss()
@@ -97,7 +127,8 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
                         name = category.name,
                         percent = 0,
                         balance = 0,
-                        goal = null
+                        goal = null,
+                        goalDate = null
                     )
                 )
                 categoriesViewmodel.setDeletedCategory(category.id, 1)

@@ -80,7 +80,8 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                 selected.name,
                 selected.percent,
                 selected.balance - amount,
-                selected.goal
+                selected.goal,
+                goalDate = selected.goalDate
             )
             categoriesViewmodel.updateCategory(updatedCategory)
 

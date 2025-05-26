@@ -35,6 +35,17 @@
         android:paddingBottom="16dp"
         android:textSize="14sp" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/category_goal_date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:contentDescription="@string/goal_date"
+        android:text="@string/goal_date"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textSize="14sp" />
+
     <com.google.android.material.slider.RangeSlider
         android:id="@+id/category_percent_slider"
         android:layout_width="match_parent"

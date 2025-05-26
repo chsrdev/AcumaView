@@ -98,7 +98,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                 category1.name,
                 category1.percent,
                 category1.balance - amount,
-                category1.goal
+                category1.goal,
+                goalDate = category1.goalDate
             )
             categoriesViewmodel.updateCategory(updatedCategory1)
 
@@ -113,7 +114,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                                 category.name,
                                 category.percent,
                                 category.balance + amount * category.percent / 100,
-                                category.goal
+                                category.goal,
+                                goalDate = category.goalDate
                             )
                             categoriesViewmodel.updateCategory(updatedCategory2)
                             transactionsViewmodel.addTransaction(
@@ -136,7 +138,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                                 reserve.name,
                                 reserve.percent,
                                 reserve.balance + amount * (100 - percentSum) / 100,
-                                reserve.goal
+                                reserve.goal,
+                                goalDate = reserve.goalDate
                             )
                             categoriesViewmodel.updateCategory(updatedReserve)
                             transactionsViewmodel.addTransaction(
@@ -158,7 +161,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                     category2.name,
                     category2.percent,
                     category2.balance + amount,
-                    category2.goal
+                    category2.goal,
+                    goalDate = category2.goalDate
                 )
                 categoriesViewmodel.updateCategory(updatedCategory2)
 

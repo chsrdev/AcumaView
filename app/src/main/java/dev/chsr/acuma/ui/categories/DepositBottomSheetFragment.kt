@@ -84,7 +84,8 @@ class DepositBottomSheetFragment : BottomSheetDialogFragment() {
                             category.name,
                             category.percent,
                             category.balance + amount * category.percent / 100,
-                            category.goal
+                            category.goal,
+                            goalDate = category.goalDate
                         )
                         categoriesViewmodel.updateCategory(updatedCategory)
                         transactionsViewmodel.addTransaction(
@@ -105,7 +106,8 @@ class DepositBottomSheetFragment : BottomSheetDialogFragment() {
                     selected.name,
                     selected.percent,
                     selected.balance + amount,
-                    selected.goal
+                    selected.goal,
+                    goalDate = selected.goalDate
                 )
                 categoriesViewmodel.updateCategory(updatedCategory)
                 transactionsViewmodel.addTransaction(

@@ -21,4 +21,7 @@
     <string name="reserve">Reserve</string>
     <string name="comment">Comment</string>
     <string name="filter">Filter</string>
+    <string name="goal_date">Goal date</string>
+    <string name="days">days</string>
+    <string name="day">day</string>
 </resources>

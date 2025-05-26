@@ -20,9 +20,15 @@ import dev.chsr.acuma.R
 import dev.chsr.acuma.databinding.CategoryItemBinding
 import dev.chsr.acuma.entity.Category
 import dev.chsr.acuma.ui.categories.EditCategoryBottomSheetFragment
+import dev.chsr.acuma.ui.history.adapter.formatDate
+import dev.chsr.acuma.ui.history.adapter.formatTime
+import dev.chsr.acuma.ui.history.adapter.toLocalDateTime
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import kotlin.coroutines.coroutineContext
 
 class CategoriesAdapter(val fragmentManager: FragmentManager) :
-        RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {
+    RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {
     class ViewHolder(val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     private var categories: List<Category> = emptyList()
@@ -32,7 +38,8 @@ class CategoriesAdapter(val fragmentManager: FragmentManager) :
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val binding = CategoryItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        val binding =
+            CategoryItemBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
         return ViewHolder(binding)
     }
 
@@ -41,16 +48,35 @@ class CategoriesAdapter(val fragmentManager: FragmentManager) :
         holder.binding.categoryName.text = category.name
         if (category.goal != null) {
             val balanceText = (category.balance / 100f).toString() + "/" + category.goal / 100f
-            holder.binding.categoryBalance.text = getSpannableBalanceWithGoal(holder.binding.root.context, balanceText)
+            holder.binding.categoryBalance.text =
+                getSpannableBalanceWithGoal(holder.binding.root.context, balanceText)
             holder.binding.categoryGoalProcess.visibility = View.VISIBLE
-            holder.binding.categoryGoalProcess.progress = 100*category.balance / category.goal
+            holder.binding.categoryGoalProcess.progress = 100 * category.balance / category.goal
         } else {
-            holder.binding.categoryBalance.text = (category.balance/100f).toString()
+            holder.binding.categoryBalance.text = (category.balance / 100f).toString()
             holder.binding.categoryGoalProcess.visibility = View.GONE
+        }
+        if (category.goalDate != null) {
+            val leftDays = ChronoUnit.DAYS.between(LocalDateTime.now(), category.goalDate.toLocalDateTime())
+            val leftDaysString = if (leftDays > 0) "($leftDays ${holder.itemView.context.getString(R.string.days)})" else ""
+            val resultString = "${category.goalDate.toLocalDateTime().formatDate(holder.itemView.context)} $leftDaysString"
+
+            holder.binding.categoryEarnPerDay.visibility = View.VISIBLE
+            holder.binding.categoryGoalDate.visibility = View.VISIBLE
+            holder.binding.categoryGoalDate.text = resultString
+
+            if (category.goal != null && leftDays > 0) {
+                val earnPerDay = (category.goal - category.balance) / leftDays/100
+                holder.binding.categoryEarnPerDay.text = "$earnPerDay/${holder.itemView.context.getString(R.string.day)}"
+            }
+        } else {
+            holder.binding.categoryEarnPerDay.visibility = View.GONE
+            holder.binding.categoryGoalDate.visibility = View.VISIBLE
         }
 
         if (category.percent != 0) {
-            holder.binding.categoryName.text = getSpannableNameWithPercent(holder.binding.root.context, category)
+            holder.binding.categoryName.text =
+                getSpannableNameWithPercent(holder.binding.root.context, category)
         }
         holder.binding.root.setOnClickListener {
             val editCategoryBottomSheet = EditCategoryBottomSheetFragment(categories[position])
@@ -108,7 +134,12 @@ class CategoriesAdapter(val fragmentManager: FragmentManager) :
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spanBalanceText.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(context, R.color.category_item_goal_text_color)),
+            ForegroundColorSpan(
+                ContextCompat.getColor(
+                    context,
+                    R.color.category_item_goal_text_color
+                )
+            ),
             balanceText.indexOf("/"),
             balanceText.length,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

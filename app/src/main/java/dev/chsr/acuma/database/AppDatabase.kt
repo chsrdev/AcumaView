@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Category::class, Transaction::class], version = 3)
+@Database(entities = [Category::class, Transaction::class], version = 4)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun transactionDao(): TransactionDao
@@ -49,6 +49,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE categories ADD COLUMN goal_date INTEGER")
+            }
+        }
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -63,7 +69,8 @@ abstract class AppDatabase : RoomDatabase() {
                                 name = context.getString(R.string.reserve),
                                 percent = 100,
                                 balance = 0,
-                                goal = null
+                                goal = null,
+                                goalDate = null
                             )
                             getInstance(context).categoryDao().insertAll(reserveCategory)
                         }
@@ -74,7 +81,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "acuma-database"
-                ).addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3)
+                ).addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3).addMigrations(
+                    MIGRATION_3_4
+                )
                     .addCallback(roomCallback).build()
                 INSTANCE = instance
                 instance

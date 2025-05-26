@@ -1,5 +1,6 @@
 package dev.chsr.acuma.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,5 +11,7 @@ data class Category(
     val percent: Int = 0,
     val balance: Int = 0,
     val goal: Int?,
-    val deleted: Int = 0
+    val deleted: Int = 0,
+    @ColumnInfo("goal_date")
+    val goalDate: Long?
 )

@@ -1,66 +1,81 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/bottom_sheet_bg"
-    android:padding="16dp" >
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:text="@string/create_category"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:background="@color/bottom_sheet_bg"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/category_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:hint="@string/category_name"
-        android:paddingBottom="16dp"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:text="@string/create_category"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/category_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="@string/category_name"
+            android:paddingBottom="16dp"
+            android:textSize="14sp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/category_goal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="@string/goal_optional"
+            android:inputType="numberDecimal"
+            android:paddingBottom="16dp"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/category_goal_date_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:contentDescription="@string/goal_date"
+            android:text="@string/goal_date"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textSize="14sp" />
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/category_percent_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:stepSize="1"
+            android:valueFrom="0"
+            android:valueTo="100" />
+
+        <TextView
+            android:id="@+id/category_percent_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:paddingBottom="16dp"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="bold" />
 
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/category_goal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:hint="@string/goal_optional"
-        android:inputType="numberDecimal"
-        android:paddingBottom="16dp"
-        android:textSize="14sp" />
-
-    <com.google.android.material.slider.RangeSlider
-        android:id="@+id/category_percent_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:stepSize="1"
-        android:valueFrom="0"
-        android:valueTo="100" />
-
-    <TextView
-        android:id="@+id/category_percent_text"
-        android:layout_width="match_parent"
-        android:textStyle="bold"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:paddingBottom="16dp"
-        android:textColor="?attr/colorPrimary" />
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_category_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:contentDescription="@string/create"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:text="@string/create" />
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_category_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:contentDescription="@string/create"
+            android:text="@string/create"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>
