@@ -95,7 +95,7 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                                 fromId = it.id,
                                 toId = null,
                                 amount = ctAmount.toInt(),
-                                comment = binding.comment.text.toString() + " (${getString(R.string.distribute)} ${amount / 100})",
+                                comment = binding.comment.text.toString() + " (${getString(R.string.distribute)} ${amount / 100f})",
                                 date = System.currentTimeMillis()
                             )
                         )
