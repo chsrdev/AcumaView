@@ -77,15 +77,8 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
         withdrawButton.setOnClickListener {
             val amount = (amountText.text.toString().toFloat() * 100).toInt()
             if (categoriesSpinner.selectedItemPosition == 0) {
-//                var weightSum = 0f
-//                categories.forEach {
-//                    if (it.percent != 0) {
-//                        weightSum += 1f / (it.percent / 100f)
-//                    }
-//                }
                 categories.forEach {
                     if (it.percent != 0) {
-//                        val weight = 1f / (it.percent / 100f)
                         val ctAmount = amount * it.percent / 100f
                         categoriesViewmodel.updateCategory(
                             Category(
@@ -109,7 +102,7 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                     }
                 }
             } else {
-                val selected = categories[categoriesSpinner.selectedItemPosition]
+                val selected = categories[categoriesSpinner.selectedItemPosition-1]
                 val updatedCategory = Category(
                     selected.id,
                     selected.name,
