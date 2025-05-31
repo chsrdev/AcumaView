@@ -38,6 +38,12 @@ class CategoriesViewModel(private val categoryRepository: CategoryRepository) : 
     fun getById(id: Int): Flow<Category> {
         return categoryRepository.getCategoryById(id)
     }
+
+    fun setCategoryBalance(id: Int, value: Int) {
+        viewModelScope.launch {
+            categoryRepository.setBalance(id, value)
+        }
+    }
 }
 
 class CategoriesViewModelFactory(private val categoryRepository: CategoryRepository) :

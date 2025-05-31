@@ -79,16 +79,7 @@ class DepositBottomSheetFragment : BottomSheetDialogFragment() {
             if (categoriesSpinner.selectedItemPosition == 0) {
                 categories.forEach { category ->
                     if (amount * category.percent / 100 != 0) {
-                        val updatedCategory = Category(
-                            category.id,
-                            category.name,
-                            category.percent,
-                            category.balance + amount * category.percent / 100,
-                            category.goal,
-                            goalDate = category.goalDate,
-                            description = category.description
-                        )
-                        categoriesViewmodel.updateCategory(updatedCategory)
+                        categoriesViewmodel.setCategoryBalance(category.id, category.balance + amount * category.percent / 100)
                         transactionsViewmodel.addTransaction(
                             Transaction(
                                 fromId = null,
@@ -102,16 +93,7 @@ class DepositBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             } else {
                 val selected = categories[categoriesSpinner.selectedItemPosition - 1]
-                val updatedCategory = Category(
-                    selected.id,
-                    selected.name,
-                    selected.percent,
-                    selected.balance + amount,
-                    selected.goal,
-                    goalDate = selected.goalDate,
-                    description = selected.description
-                )
-                categoriesViewmodel.updateCategory(updatedCategory)
+                categoriesViewmodel.setCategoryBalance(selected.id, selected.balance + amount)
                 transactionsViewmodel.addTransaction(
                     Transaction(
                         fromId = null,

@@ -27,4 +27,7 @@ interface CategoryDao {
 
     @Update
     suspend fun update(category: Category)
+
+    @Query("UPDATE categories SET balance=:value WHERE id=:id")
+    suspend fun setBalance(id: Int, value: Int)
 }

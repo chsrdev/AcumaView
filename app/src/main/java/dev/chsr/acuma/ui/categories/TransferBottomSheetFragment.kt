@@ -93,16 +93,7 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
             val amount = (amountText.text.toString().toFloat() * 100).toInt()
             val category1 = categories[categoriesSpinner1.selectedItemPosition]
 
-            val updatedCategory1 = Category(
-                category1.id,
-                category1.name,
-                category1.percent,
-                category1.balance - amount,
-                category1.goal,
-                goalDate = category1.goalDate,
-                description = category1.description
-            )
-            categoriesViewmodel.updateCategory(updatedCategory1)
+            categoriesViewmodel.setCategoryBalance(category1.id, category1.balance -amount)
 
             if (categoriesSpinner2.selectedItemPosition == 0) {
                 var percentSum = 0
@@ -110,16 +101,7 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                     if (categories.indexOf(category) != categoriesSpinner1.selectedItemPosition) {
                         if (amount * category.percent / 100 != 0) {
                             percentSum += amount * category.percent / 1000
-                            val updatedCategory2 = Category(
-                                category.id,
-                                category.name,
-                                category.percent,
-                                category.balance + amount * category.percent / 100,
-                                category.goal,
-                                goalDate = category.goalDate,
-                                description = category.description
-                            )
-                            categoriesViewmodel.updateCategory(updatedCategory2)
+                            categoriesViewmodel.setCategoryBalance(category.id, category.balance + amount * category.percent / 100)
                             transactionsViewmodel.addTransaction(
                                 Transaction(
                                     fromId = category1.id,
@@ -135,16 +117,7 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                 if (percentSum < 100) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         categoriesViewmodel.getById(-1).collect { reserve ->
-                            val updatedReserve = Category(
-                                reserve.id,
-                                reserve.name,
-                                reserve.percent,
-                                reserve.balance + amount * (100 - percentSum) / 100,
-                                reserve.goal,
-                                goalDate = reserve.goalDate,
-                                description = reserve.description
-                            )
-                            categoriesViewmodel.updateCategory(updatedReserve)
+                            categoriesViewmodel.setCategoryBalance(reserve.id, reserve.balance + amount * (100 - percentSum) / 100)
                             transactionsViewmodel.addTransaction(
                                 Transaction(
                                     fromId = category1.id,
@@ -159,16 +132,7 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             } else {
                 val category2 = categories[categoriesSpinner2.selectedItemPosition - 1]
-                val updatedCategory2 = Category(
-                    category2.id,
-                    category2.name,
-                    category2.percent,
-                    category2.balance + amount,
-                    category2.goal,
-                    goalDate = category2.goalDate,
-                    description = category2.description
-                )
-                categoriesViewmodel.updateCategory(updatedCategory2)
+                categoriesViewmodel.setCategoryBalance(category2.id, category2.balance + amount)
 
                 transactionsViewmodel.addTransaction(
                     Transaction(

@@ -29,4 +29,8 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
     suspend fun setDeleted(id: Int, value: Int) {
         categoryDao.setDeleted(id, value)
     }
+
+    suspend fun setBalance(id: Int, value: Int) {
+        categoryDao.setBalance(id, value)
+    }
 }

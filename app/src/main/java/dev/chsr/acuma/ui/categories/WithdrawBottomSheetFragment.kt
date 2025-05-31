@@ -79,17 +79,7 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                 categories.forEach {
                     if (it.percent != 0) {
                         val ctAmount = amount * it.percent / 100f
-                        categoriesViewmodel.updateCategory(
-                            Category(
-                                it.id,
-                                it.name,
-                                it.percent,
-                                it.balance - ctAmount.toInt(),
-                                it.goal,
-                                goalDate = it.goalDate,
-                                description = it.description
-                            )
-                        )
+                        categoriesViewmodel.setCategoryBalance(it.id, it.balance - ctAmount.toInt())
                         transactionsViewmodel.addTransaction(
                             Transaction(
                                 fromId = it.id,
@@ -103,17 +93,7 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             } else {
                 val selected = categories[categoriesSpinner.selectedItemPosition-1]
-                val updatedCategory = Category(
-                    selected.id,
-                    selected.name,
-                    selected.percent,
-                    selected.balance - amount,
-                    selected.goal,
-                    goalDate = selected.goalDate,
-                    description = selected.description
-                )
-                categoriesViewmodel.updateCategory(updatedCategory)
-
+                categoriesViewmodel.setCategoryBalance(selected.id, selected.balance - amount)
                 transactionsViewmodel.addTransaction(
                     Transaction(
                         fromId = selected.id,
