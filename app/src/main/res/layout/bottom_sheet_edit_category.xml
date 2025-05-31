@@ -24,6 +24,14 @@
         android:paddingBottom="16dp"
         android:textSize="14sp" />
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/category_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:hint="@string/category_description"
+        android:paddingBottom="16dp"
+        android:textSize="14sp" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/category_goal"

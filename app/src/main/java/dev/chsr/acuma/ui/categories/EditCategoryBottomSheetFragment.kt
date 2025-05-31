@@ -93,6 +93,8 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
             categoryPercentText.text = "${value.toInt()}%"
         }
 
+        binding.categoryDescription.setText(category.description ?: "")
+
         saveButton.setOnClickListener {
             val percent = categoryPercentSlider.values[0].toInt()
             val updatedCategoory = Category(
@@ -103,7 +105,8 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
                 ) null else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
                 balance = category.balance,
                 percent = percent,
-                goalDate = goalDateTimestamp
+                goalDate = goalDateTimestamp,
+                description = binding.categoryDescription.text.toString()
             )
             categoriesViewmodel.updateCategory(updatedCategoory)
             if (percent != category.percent)
@@ -128,7 +131,8 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
                         percent = 0,
                         balance = 0,
                         goal = null,
-                        goalDate = null
+                        goalDate = null,
+                        description = null
                     )
                 )
                 categoriesViewmodel.setDeletedCategory(category.id, 1)

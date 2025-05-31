@@ -1,7 +1,6 @@
 package dev.chsr.acuma.ui.categories
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,7 +86,8 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                                 it.percent,
                                 it.balance - ctAmount.toInt(),
                                 it.goal,
-                                goalDate = it.goalDate
+                                goalDate = it.goalDate,
+                                description = it.description
                             )
                         )
                         transactionsViewmodel.addTransaction(
@@ -109,7 +109,8 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
                     selected.percent,
                     selected.balance - amount,
                     selected.goal,
-                    goalDate = selected.goalDate
+                    goalDate = selected.goalDate,
+                    description = selected.description
                 )
                 categoriesViewmodel.updateCategory(updatedCategory)
 

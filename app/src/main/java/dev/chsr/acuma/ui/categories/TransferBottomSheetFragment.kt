@@ -99,7 +99,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                 category1.percent,
                 category1.balance - amount,
                 category1.goal,
-                goalDate = category1.goalDate
+                goalDate = category1.goalDate,
+                description = category1.description
             )
             categoriesViewmodel.updateCategory(updatedCategory1)
 
@@ -115,7 +116,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                                 category.percent,
                                 category.balance + amount * category.percent / 100,
                                 category.goal,
-                                goalDate = category.goalDate
+                                goalDate = category.goalDate,
+                                description = category.description
                             )
                             categoriesViewmodel.updateCategory(updatedCategory2)
                             transactionsViewmodel.addTransaction(
@@ -139,7 +141,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                                 reserve.percent,
                                 reserve.balance + amount * (100 - percentSum) / 100,
                                 reserve.goal,
-                                goalDate = reserve.goalDate
+                                goalDate = reserve.goalDate,
+                                description = reserve.description
                             )
                             categoriesViewmodel.updateCategory(updatedReserve)
                             transactionsViewmodel.addTransaction(
@@ -162,7 +165,8 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
                     category2.percent,
                     category2.balance + amount,
                     category2.goal,
-                    goalDate = category2.goalDate
+                    goalDate = category2.goalDate,
+                    description = category2.description
                 )
                 categoriesViewmodel.updateCategory(updatedCategory2)
 

@@ -24,4 +24,5 @@
     <string name="goal_date">Goal date</string>
     <string name="days">days</string>
     <string name="day">day</string>
+    <string name="category_description">Category description</string>
 </resources>

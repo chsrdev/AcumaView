@@ -13,5 +13,6 @@ data class Category(
     val goal: Int?,
     val deleted: Int = 0,
     @ColumnInfo("goal_date")
-    val goalDate: Long?
+    val goalDate: Long?,
+    val description: String?
 )

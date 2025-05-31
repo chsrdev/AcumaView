@@ -82,7 +82,8 @@ class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
                             .isEmpty()
                     ) null else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
                     percent = percent,
-                    goalDate = goalDateTimestamp
+                    goalDate = goalDateTimestamp,
+                    description = binding.categoryDescription.text.toString()
                 )
             )
             viewLifecycleOwner.lifecycleScope.launch {
