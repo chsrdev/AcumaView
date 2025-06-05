@@ -46,11 +46,14 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
 
         if (category.goal != null)
             categoryGoalText.setText((category.goal / 100f).toInt().toString())
+        if (category.maxBalance != null)
+            binding.categoryMaxBalance.setText((category.maxBalance / 100f).toInt().toString())
         var goalDateTimestamp: Long? = category.goalDate
         val calendar = Calendar.getInstance()
         if (goalDateTimestamp != null) {
             calendar.timeInMillis = goalDateTimestamp
-            binding.categoryGoalDateButton.text = goalDateTimestamp.toLocalDateTime().formatDate(requireContext())
+            binding.categoryGoalDateButton.text =
+                goalDateTimestamp.toLocalDateTime().formatDate(requireContext())
         }
 
         val year = calendar.get(Calendar.YEAR)
@@ -100,13 +103,16 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
             val updatedCategoory = Category(
                 id = category.id,
                 name = categoryNameText.text.toString(),
-                goal = if (categoryGoalText.text.toString()
-                        .isEmpty()
-                ) null else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
+                goal = if (categoryGoalText.text.isNullOrBlank())
+                    null
+                else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
                 balance = category.balance,
                 percent = percent,
                 goalDate = goalDateTimestamp,
-                description = binding.categoryDescription.text.toString()
+                description = binding.categoryDescription.text.toString(),
+                maxBalance = if (binding.categoryMaxBalance.text.isNullOrBlank())
+                    null
+                else (binding.categoryMaxBalance.text.toString().toFloat() * 100).toInt()
             )
             categoriesViewmodel.updateCategory(updatedCategoory)
             if (percent != category.percent)
@@ -132,7 +138,8 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
                         balance = 0,
                         goal = null,
                         goalDate = null,
-                        description = null
+                        description = null,
+                        maxBalance = null
                     )
                 )
                 categoriesViewmodel.setDeletedCategory(category.id, 1)

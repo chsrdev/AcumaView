@@ -47,6 +47,16 @@
                 android:paddingBottom="16dp"
                 android:textSize="14sp" />
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/category_max_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:hint="@string/max_balance"
+                android:inputType="numberDecimal"
+                android:paddingBottom="16dp"
+                android:textSize="14sp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/category_goal_date_button"
                 android:layout_width="match_parent"

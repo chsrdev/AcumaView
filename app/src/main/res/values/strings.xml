@@ -25,4 +25,5 @@
     <string name="days">days</string>
     <string name="day">day</string>
     <string name="category_description">Category description</string>
+    <string name="max_balance">Max balance</string>
 </resources>

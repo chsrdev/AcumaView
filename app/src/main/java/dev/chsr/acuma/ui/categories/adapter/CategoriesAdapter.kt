@@ -68,6 +68,9 @@ class CategoriesAdapter(val fragmentManager: FragmentManager) :
             if (category.goal != null && leftDays > 0) {
                 val earnPerDay = (category.goal - category.balance) / leftDays/100
                 holder.binding.categoryEarnPerDay.text = "$earnPerDay/${holder.itemView.context.getString(R.string.day)}"
+                if (category.percent != 0) {
+                    holder.binding.categoryEarnPerDay.text = "$earnPerDay/${holder.itemView.context.getString(R.string.day)}\n(${earnPerDay * (100f/category.percent)})"
+                }
             }
         } else {
             holder.binding.categoryEarnPerDay.visibility = View.GONE

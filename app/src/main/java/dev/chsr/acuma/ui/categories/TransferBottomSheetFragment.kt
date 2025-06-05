@@ -90,6 +90,7 @@ class TransferBottomSheetFragment : BottomSheetDialogFragment() {
         val transferButton = binding.transferBtn
 
         transferButton.setOnClickListener {
+            if (amountText.text.isNullOrBlank()) return@setOnClickListener
             val amount = (amountText.text.toString().toFloat() * 100).toInt()
             val category1 = categories[categoriesSpinner1.selectedItemPosition]
 

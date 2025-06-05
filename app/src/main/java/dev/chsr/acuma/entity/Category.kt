@@ -14,5 +14,6 @@ data class Category(
     val deleted: Int = 0,
     @ColumnInfo("goal_date")
     val goalDate: Long?,
-    val description: String?
+    val description: String?,
+    @ColumnInfo("max_balance") val maxBalance: Int?
 )

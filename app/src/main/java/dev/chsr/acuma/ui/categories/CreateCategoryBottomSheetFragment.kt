@@ -15,7 +15,6 @@ import dev.chsr.acuma.repository.CategoryRepository
 import dev.chsr.acuma.ui.viewmodel.CategoriesViewModel
 import dev.chsr.acuma.ui.viewmodel.CategoriesViewModelFactory
 import kotlinx.coroutines.launch
-import androidx.core.view.isGone
 import dev.chsr.acuma.ui.history.adapter.formatDate
 import dev.chsr.acuma.ui.history.adapter.toLocalDateTime
 import java.util.Calendar
@@ -23,6 +22,7 @@ import java.util.Calendar
 class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetCreateCategoryBinding? = null
     private val binding get() = _binding!!
+    private lateinit var categoriesViewModel: CategoriesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,8 +30,8 @@ class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = BottomSheetCreateCategoryBinding.inflate(inflater, container, false)
-        val root = binding.root
-        val categoriesViewmodel = ViewModelProvider(
+
+        categoriesViewModel = ViewModelProvider(
             this,
             CategoriesViewModelFactory(
                 CategoryRepository(
@@ -40,60 +40,70 @@ class CreateCategoryBottomSheetFragment : BottomSheetDialogFragment() {
             )
         )[CategoriesViewModel::class.java]
 
-        val categoryNameText = binding.categoryName
-        val categoryGoalText = binding.categoryGoal
+        val rootView = binding.root
+        val nameTextInput = binding.categoryName
+        val descriptionTextInput = binding.categoryDescription
+        val goalTextInput = binding.categoryGoal
+        val maxBalanceTextInput = binding.categoryMaxBalance
+        val goalDateButton = binding.categoryGoalDateButton
+        val percentSlider = binding.categoryPercentSlider
+        val percentTextView = binding.categoryPercentText
+        val createButton = binding.createCategoryBtn
+
         val goalDateDialog = DatePickerDialog(requireContext())
         var goalDateTimestamp: Long? = null
-        binding.categoryGoalDateButton.setOnClickListener {
+        goalDateButton.setOnClickListener {
             goalDateDialog.show()
         }
         goalDateDialog.setOnDateSetListener { view, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
             goalDateTimestamp = calendar.timeInMillis
-            binding.categoryGoalDateButton.text = calendar.timeInMillis.toLocalDateTime().formatDate(requireContext())
+            goalDateButton.text =
+                calendar.timeInMillis.toLocalDateTime().formatDate(requireContext())
         }
 
-        val categoryPercentSlider = binding.categoryPercentSlider
-        categoryPercentSlider.setValues(0f)
+        percentSlider.setValues(0f)
         viewLifecycleOwner.lifecycleScope.launch {
-            categoriesViewmodel.categories.collect {
-                val percentSum = it.sumOf { category -> if (category.id != -1) category.percent else 0}
+            categoriesViewModel.categories.collect {
+                val percentSum =
+                    it.sumOf { category -> if (category.id != -1) category.percent else 0 }
                 if (percentSum >= 100)
-                    categoryPercentSlider.isEnabled = false
+                    percentSlider.isEnabled = false
                 else
-                    categoryPercentSlider.valueTo = 100f - percentSum
+                    percentSlider.valueTo = 100f - percentSum
             }
         }
-        val categoryPercentText = binding.categoryPercentText
 
-        categoryPercentText.text = "${categoryPercentSlider.values[0].toInt()}%"
-        categoryPercentSlider.addOnChangeListener { _, value, _ ->
-            categoryPercentText.text = "${value.toInt()}%"
+        percentTextView.text = "${percentSlider.values[0].toInt()}%"
+        percentSlider.addOnChangeListener { _, value, _ ->
+            percentTextView.text = "${value.toInt()}%"
         }
 
-        val createCategoryButton = binding.createCategoryBtn
-        createCategoryButton.setOnClickListener {
-            val percent = categoryPercentSlider.values[0].toInt()
-            categoriesViewmodel.addCategory(
+        createButton.setOnClickListener {
+            val percent = percentSlider.values[0].toInt()
+            categoriesViewModel.addCategory(
                 Category(
-                    name = categoryNameText.text.toString(),
-                    goal = if (categoryGoalText.text.toString()
-                            .isEmpty()
-                    ) null else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
+                    name = nameTextInput.text.toString(),
+                    goal = if (goalTextInput.text.isNullOrBlank())
+                        null
+                    else (goalTextInput.text.toString().toFloat() * 100).toInt(),
                     percent = percent,
                     goalDate = goalDateTimestamp,
-                    description = binding.categoryDescription.text.toString()
+                    description = descriptionTextInput.text.toString(),
+                    maxBalance = if (maxBalanceTextInput.text.isNullOrBlank())
+                        null
+                    else (maxBalanceTextInput.text.toString().toFloat() * 100).toInt()
                 )
             )
             viewLifecycleOwner.lifecycleScope.launch {
-                categoriesViewmodel.getById(-1).collect {
-                    categoriesViewmodel.setCategoryPercent(-1, it.percent - percent)
+                categoriesViewModel.getById(-1).collect {
+                    categoriesViewModel.setCategoryPercent(-1, it.percent - percent)
                 }
             }
             dismiss()
         }
 
-        return root
+        return rootView
     }
 }

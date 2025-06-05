@@ -74,6 +74,7 @@ class WithdrawBottomSheetFragment : BottomSheetDialogFragment() {
         val withdrawButton = binding.withdrawBtn
 
         withdrawButton.setOnClickListener {
+            if (amountText.text.isNullOrBlank()) return@setOnClickListener
             val amount = (amountText.text.toString().toFloat() * 100).toInt()
             if (categoriesSpinner.selectedItemPosition == 0) {
                 categories.forEach {
