@@ -98,6 +98,8 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
 
         binding.categoryDescription.setText(category.description ?: "")
 
+        binding.categoryIsHidden.isChecked = category.isHidden == 1
+
         saveButton.setOnClickListener {
             val percent = categoryPercentSlider.values[0].toInt()
             val updatedCategoory = Category(
@@ -108,6 +110,7 @@ class EditCategoryBottomSheetFragment(val category: Category) : BottomSheetDialo
                 else (categoryGoalText.text.toString().toFloat() * 100).toInt(),
                 balance = category.balance,
                 percent = percent,
+                isHidden = if (binding.categoryIsHidden.isChecked) 1 else 0,
                 goalDate = goalDateTimestamp,
                 description = binding.categoryDescription.text.toString(),
                 maxBalance = if (binding.categoryMaxBalance.text.isNullOrBlank())

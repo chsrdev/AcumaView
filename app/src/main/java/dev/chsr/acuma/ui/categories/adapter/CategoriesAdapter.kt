@@ -45,15 +45,16 @@ class CategoriesAdapter(val fragmentManager: FragmentManager) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = categories[position]
+        val balance = if (category.isHidden == 1) "???" else (category.balance / 100f).toString()
         holder.binding.categoryName.text = category.name
         if (category.goal != null) {
-            val balanceText = (category.balance / 100f).toString() + "/" + category.goal / 100f
+            val balanceText = balance + "/" + category.goal / 100f
             holder.binding.categoryBalance.text =
                 getSpannableBalanceWithGoal(holder.binding.root.context, balanceText)
             holder.binding.categoryGoalProcess.visibility = View.VISIBLE
             holder.binding.categoryGoalProcess.progress = 100 * category.balance / category.goal
         } else {
-            holder.binding.categoryBalance.text = (category.balance / 100f).toString()
+            holder.binding.categoryBalance.text = balance
             holder.binding.categoryGoalProcess.visibility = View.GONE
         }
         if (category.goalDate != null) {

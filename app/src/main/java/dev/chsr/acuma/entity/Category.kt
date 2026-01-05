@@ -12,6 +12,8 @@ data class Category(
     val balance: Int = 0,
     val goal: Int?,
     val deleted: Int = 0,
+    @ColumnInfo("is_hidden")
+    val isHidden: Int = 0,
     @ColumnInfo("goal_date")
     val goalDate: Long?,
     val description: String?,

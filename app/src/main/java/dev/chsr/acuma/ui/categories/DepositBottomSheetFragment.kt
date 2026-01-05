@@ -109,14 +109,13 @@ class DepositBottomSheetFragment : BottomSheetDialogFragment() {
     ) {
         var left = amountToDistribute
         categories.forEach { category ->
-            if (category.id == -1) return@forEach
+            if (category.id == -1 || category.deleted == 1) return@forEach
 
             var categoryShare = amountToDistribute * category.percent / 100
             if (category.maxBalance != null) {
                 val balanceGap = category.maxBalance - category.balance
                 if (categoryShare > balanceGap)
                     categoryShare = balanceGap
-
             }
 
             if (categoryShare <= 0) return@forEach

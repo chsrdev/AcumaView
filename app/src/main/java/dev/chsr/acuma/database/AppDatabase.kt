@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Category::class, Transaction::class], version = 6)
+@Database(entities = [Category::class, Transaction::class], version = 7)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun transactionDao(): TransactionDao
@@ -67,6 +67,11 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE categories ADD COLUMN is_hidden INTEGER")
+            }
+        }
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -97,7 +102,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "acuma-database"
                 ).addMigrations(MIGRATION_1_2).addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4).addMigrations(MIGRATION_4_5)
-                    .addMigrations(MIGRATION_5_6)
+                    .addMigrations(MIGRATION_5_6).addMigrations(MIGRATION_6_7)
                     .addCallback(roomCallback).build()
                 INSTANCE = instance
                 instance
